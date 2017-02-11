@@ -41,6 +41,7 @@ import org.ros.node.NodeMainExecutor;
 import org.ros.node.topic.Publisher;
 import org.ros.node.topic.Subscriber;
 
+import java.net.URI;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -65,6 +66,8 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
 
     private NodeMainExecutor nodeMainExecutor;
 
+    public static java.lang.String MASTER_URI;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -73,8 +76,9 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
 
     public MainActivity() {
         // The RosActivity constructor configures the notification title and ticker messages.
-        super("ROS E-Stop", "ROS E-Stop"/*, URI.create("http://192.168.1.125:11311")*/);
+        super("ROS E-Stop", "ROS E-Stop", MASTER_URI != null ? URI.create(MASTER_URI) : null);
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -392,10 +396,13 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
         @Override
         public void onShutdown(Node node) {
             Log.d("DEBUG", "in node shutdown");
+            //finish();
         }
 
         @Override
         public void onShutdownComplete(Node node) {
+            Log.d("DEBUG", "in node complete shutdown");
+            finish();
         }
 
         private void updateStatus() {
