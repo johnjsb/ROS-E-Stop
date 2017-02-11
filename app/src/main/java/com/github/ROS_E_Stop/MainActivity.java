@@ -26,6 +26,7 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.jaredrummler.android.device.DeviceName;
 
 import org.ros.address.InetAddressFactory;
 import org.ros.android.RosActivity;
@@ -323,12 +324,12 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
             statusPublisher = connectedNode.newPublisher(GraphName.of("/e_stop/status"), Bool._TYPE);
 
             lastMasterCheckTime = System.currentTimeMillis();
-            /*modelPublisher = connectedNode.newPublisher(GraphName.of("/" + getDefaultNodeName().toString() + "/model"), String._TYPE);
+            modelPublisher = connectedNode.newPublisher(GraphName.of("/" + getDefaultNodeName().toString() + "/model"), String._TYPE);
 
             modelPublisher.setLatchMode(true);
             String modelMsg = modelPublisher.newMessage();
             modelMsg.setData(DeviceName.getDeviceName());
-            modelPublisher.publish(modelMsg);*/
+            modelPublisher.publish(modelMsg);
 
             statusUpdateTask = new TimerTask() {
                 @Override

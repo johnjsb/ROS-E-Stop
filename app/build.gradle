@@ -28,4 +28,7 @@ dependencies {
 
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+
+    compile 'com.jaredrummler:android-device-names:1.1.2'
+
 }
