@@ -196,6 +196,10 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
             case R.id.quit_app:
                 nodeMainExecutor.shutdown();
                 return true;
+
+            case R.id.change_topic:
+                eStopNode.updateTopicNameTest();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -303,7 +307,8 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
         private boolean connectionError = false;
 
 
-        //private ConnectedNode myConnectedNode;
+        private ConnectedNode myConnectedNode;
+        private boolean publishVel;
 
 
         public EStopNode(java.lang.String ipAddress) {
@@ -317,6 +322,12 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
 
         @Override
         public void onStart(final ConnectedNode connectedNode) {
+
+            myConnectedNode = connectedNode;
+            publishVel = false;
+
+            velPublisher = connectedNode.newPublisher(GraphName.of(outputVelTopicName), Twist._TYPE);
+
             masterChecker = connectedNode.newSubscriber("/e_stop/master_checker", String._TYPE);
             masterChecker.addMessageListener(new MessageListener<String>() {
                 @Override
@@ -324,7 +335,7 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
                     lastMasterCheckTime = System.currentTimeMillis();
                 }
             });
-            velPublisher = connectedNode.newPublisher(GraphName.of(outputVelTopicName), Twist._TYPE);
+
             statusPublisher = connectedNode.newPublisher(GraphName.of("/e_stop/status"), Bool._TYPE);
 
             lastMasterCheckTime = System.currentTimeMillis();
@@ -350,7 +361,7 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
                 @Override
                 protected void loop() throws InterruptedException {
 
-                    if (pressed) {
+                    if (pressed && publishVel) {
                         Twist twist = velPublisher.newMessage();
                         twist.getLinear().setX(0);
                         twist.getLinear().setY(0);
@@ -390,6 +401,7 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
                     Thread.sleep(10);
                 }
             };
+            publishVel = true;
             connectedNode.executeCancellableLoop(loop);
         }
 
@@ -409,6 +421,14 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
             Bool msg = statusPublisher.newMessage();
             msg.setData(true);
             statusPublisher.publish(msg);
+        }
+
+        public void updateTopicNameTest()
+        {
+            publishVel = false;
+            velPublisher.shutdown();
+            velPublisher = myConnectedNode.newPublisher(GraphName.of("/test/cmd_vel"), Twist._TYPE);
+            publishVel = true;
         }
 
     }

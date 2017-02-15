@@ -3,7 +3,6 @@ package com.github.ROS_E_Stop;
 import com.google.common.base.Preconditions;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -21,24 +20,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import org.ros.exception.RosRuntimeException;
 import org.ros.internal.node.client.MasterClient;
 import org.ros.internal.node.xmlrpc.XmlRpcTimeoutException;
 import org.ros.namespace.GraphName;
 import org.ros.node.NodeConfiguration;
-
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -66,32 +54,8 @@ public class CustomMasterChooserActivity extends Activity {
     private static final String BAR_CODE_SCANNER_PACKAGE_NAME =
             "com.google.zxing.client.android.SCAN";
 
-    private String selectedInterface;
     private EditText uriText;
     private Button connectButton;
-
-    private class StableArrayAdapter extends ArrayAdapter<String> {
-
-        HashMap<String, Integer> idMap = new HashMap<String, Integer>();
-
-        public StableArrayAdapter(Context context, int textViewResourceId, List<String> objects) {
-            super(context, textViewResourceId, objects);
-            for (int i = 0; i < objects.size(); ++i) {
-                idMap.put(objects.get(i), i);
-            }
-        }
-
-        @Override
-        public long getItemId(int position) {
-            String item = getItem(position);
-            return idMap.get(item);
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,8 +82,6 @@ public class CustomMasterChooserActivity extends Activity {
             }
         });
 
-        // Fallback to previous behaviour when no interface is selected.
-        selectedInterface = "";
 
         // Get the URI from preferences and display it. Since only primitive types
         // can be saved in preferences the URI is stored as a string.

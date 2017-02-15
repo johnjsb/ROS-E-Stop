@@ -4,4 +4,6 @@
         android:title="Restart App" />
     <item android:id="@+id/quit_app"
         android:title="Quit" />
+    <item android:id="@+id/change_topic"
+        android:title="Change Topic" />
 </menu>
