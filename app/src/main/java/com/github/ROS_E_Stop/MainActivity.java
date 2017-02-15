@@ -328,6 +328,14 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
 
             velPublisher = connectedNode.newPublisher(GraphName.of(outputVelTopicName), Twist._TYPE);
 
+            modelPublisher = connectedNode.newPublisher(GraphName.of("/e_stop/" + ipAddress + "/model"), String._TYPE);
+
+            modelPublisher.setLatchMode(true);
+
+            String modelMsg = modelPublisher.newMessage();
+            modelMsg.setData(DeviceName.getDeviceName());
+            modelPublisher.publish(modelMsg);
+
             masterChecker = connectedNode.newSubscriber("/e_stop/master_checker", String._TYPE);
             masterChecker.addMessageListener(new MessageListener<String>() {
                 @Override
@@ -339,12 +347,8 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
             statusPublisher = connectedNode.newPublisher(GraphName.of("/e_stop/status"), Bool._TYPE);
 
             lastMasterCheckTime = System.currentTimeMillis();
-            modelPublisher = connectedNode.newPublisher(GraphName.of("/" + getDefaultNodeName().toString() + "/model"), String._TYPE);
 
-            modelPublisher.setLatchMode(true);
-            String modelMsg = modelPublisher.newMessage();
-            modelMsg.setData(DeviceName.getDeviceName());
-            modelPublisher.publish(modelMsg);
+
 
             statusUpdateTask = new TimerTask() {
                 @Override
@@ -360,6 +364,7 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
             final CancellableLoop loop = new CancellableLoop() {
                 @Override
                 protected void loop() throws InterruptedException {
+
 
                     if (pressed && publishVel) {
                         Twist twist = velPublisher.newMessage();
