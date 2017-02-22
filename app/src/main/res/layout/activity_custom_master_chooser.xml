@@ -72,20 +72,93 @@
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="cmd_vel topic:"
+                android:id="@+id/cmd_vel_label" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="/e_stop/cmd_vel"
+                android:ems="10"
+                android:id="@+id/cmd_vel_input"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="status topic:"
+                android:id="@+id/status_label" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="/e_stop/status"
+                android:ems="10"
+                android:id="@+id/status_input"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="master checker topic:"
+                android:id="@+id/master_checker_label" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="/e_stop/master_checker"
+                android:ems="10"
+                android:id="@+id/master_checker_input"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/master_chooser_use_default_master_chooser"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:onClick="defaultMasterButtonClicked"
                 android:text="@string/use_default_master"
-                android:layout_weight="1"
                 android:visibility="visible"/>
 
         </LinearLayout>
 
+
+
     </LinearLayout>
+
+
 
     <Button
         android:id="@+id/master_chooser_cancel"
@@ -95,5 +168,7 @@
         android:layout_gravity="bottom"
         android:onClick="cancelButtonClicked"
         android:text="@string/cancel"/>
+
+
 
 </LinearLayout>
