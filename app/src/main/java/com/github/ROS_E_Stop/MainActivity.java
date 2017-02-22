@@ -461,7 +461,7 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
         public boolean isAplhaChar(char c)
         {
             return (c >= 'a' && c <= 'z') ||
-                    (c >- 'A' && c <= 'Z');
+                    (c >= 'A' && c <= 'Z');
         }
 
         public boolean isAplhaCharOrDigit(char c)
