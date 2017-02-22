@@ -430,46 +430,14 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
 
         public void updateTopicNameTest()
         {
-            publishVel = false;
-            velPublisher.shutdown();
-            velPublisher = myConnectedNode.newPublisher(GraphName.of("/test/cmd_vel"), Twist._TYPE);
-            publishVel = true;
-        }
 
-        public boolean isValidTopicName(java.lang.String topic)
-        {
-            for(int i = 0; i < topic.length(); i++)
-            {
-                if(i == 0)  //check first character, must be /, alpha character, or ~
-                {
-                    if(topic.charAt(i) != '/' && topic.charAt(i) != '~' && !isAplhaChar(topic.charAt(i)))
-                    {
-                        return false;   //topic not valid
-                    }
-                }
-                else    //all remaining characters must be alphanumeric, /, or _
-                {
-                    if(topic.charAt(i) != '/' && topic.charAt(i) != '_' && !isAplhaCharOrDigit(topic.charAt(i)))
-                    {
-                        return false;   //topic not valid
-                    }
-                }
+            java.lang.String topic_name = "/tes!t/cmd_vel";
+            if(RosTopicChecker.isValidTopicName(topic_name)) {
+                publishVel = false;
+                velPublisher.shutdown();
+                velPublisher = myConnectedNode.newPublisher(GraphName.of(topic_name), Twist._TYPE);
+                publishVel = true;
             }
-            return true;
         }
-
-        public boolean isAplhaChar(char c)
-        {
-            return (c >= 'a' && c <= 'z') ||
-                    (c >= 'A' && c <= 'Z');
-        }
-
-        public boolean isAplhaCharOrDigit(char c)
-        {
-            return (c >= 'a' && c <= 'z') ||
-                    (c >= 'A' && c <= 'Z') ||
-                    (c >= '0' && c <= '9');
-        }
-
     }
 }
