@@ -436,5 +436,40 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
             publishVel = true;
         }
 
+        public boolean isValidTopicName(java.lang.String topic)
+        {
+            for(int i = 0; i < topic.length(); i++)
+            {
+                if(i == 0)  //check first character, must be /, alpha character, or ~
+                {
+                    if(topic.charAt(i) != '/' && topic.charAt(i) != '~' && !isAplhaChar(topic.charAt(i)))
+                    {
+                        return false;   //topic not valid
+                    }
+                }
+                else    //all remaining characters must be alphanumeric, /, or _
+                {
+                    if(topic.charAt(i) != '/' && topic.charAt(i) != '_' && !isAplhaCharOrDigit(topic.charAt(i)))
+                    {
+                        return false;   //topic not valid
+                    }
+                }
+            }
+            return true;
+        }
+
+        public boolean isAplhaChar(char c)
+        {
+            return (c >= 'a' && c <= 'z') ||
+                    (c >- 'A' && c <= 'Z');
+        }
+
+        public boolean isAplhaCharOrDigit(char c)
+        {
+            return (c >= 'a' && c <= 'z') ||
+                    (c >= 'A' && c <= 'Z') ||
+                    (c >= '0' && c <= '9');
+        }
+
     }
 }
