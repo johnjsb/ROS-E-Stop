@@ -299,7 +299,6 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
         private TimerTask statusUpdateTask;
         int statusTime = 1000;
 
-        private java.lang.String outputVelTopicName = "/e_stop/cmd_vel";
         private java.lang.String ipAddress;
 
         private long lastMasterCheckTime;
@@ -309,6 +308,11 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
 
         private ConnectedNode myConnectedNode;
         private boolean publishVel;
+
+
+        private final java.lang.String DEFAULT_CMD_VEL_TOPIC = "/e_stop/cmd_vel";
+        private final java.lang.String DEFAULT_MASTER_CHECKER_TOPIC = "/e_stop/master_checker";
+        private final java.lang.String DEFAULT_STATUS_TOPIC = "/e_stop/status";
 
 
         public EStopNode(java.lang.String ipAddress) {
@@ -326,40 +330,13 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
             myConnectedNode = connectedNode;
             publishVel = false;
 
-            velPublisher = connectedNode.newPublisher(GraphName.of(outputVelTopicName), Twist._TYPE);
-
             modelPublisher = connectedNode.newPublisher(GraphName.of("/e_stop/" + ipAddress + "/model"), String._TYPE);
-
             modelPublisher.setLatchMode(true);
-
             String modelMsg = modelPublisher.newMessage();
             modelMsg.setData(DeviceName.getDeviceName());
             modelPublisher.publish(modelMsg);
 
-            masterChecker = connectedNode.newSubscriber("/e_stop/master_checker", String._TYPE);
-            masterChecker.addMessageListener(new MessageListener<String>() {
-                @Override
-                public void onNewMessage(String message) {
-                    lastMasterCheckTime = System.currentTimeMillis();
-                }
-            });
-
-            statusPublisher = connectedNode.newPublisher(GraphName.of("/e_stop/status"), Bool._TYPE);
-
-            lastMasterCheckTime = System.currentTimeMillis();
-
-
-
-            statusUpdateTask = new TimerTask() {
-                @Override
-                public void run() {
-                    updateStatus();
-                }
-            };
-
-            statusUpdateTimer = new Timer();
-
-            statusUpdateTimer.schedule(statusUpdateTask, 0, statusTime);
+            setUpTopics();
 
             final CancellableLoop loop = new CancellableLoop() {
                 @Override
@@ -406,7 +383,7 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
                     Thread.sleep(10);
                 }
             };
-            publishVel = true;
+
             connectedNode.executeCancellableLoop(loop);
         }
 
@@ -438,6 +415,35 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
                 velPublisher = myConnectedNode.newPublisher(GraphName.of(topic_name), Twist._TYPE);
                 publishVel = true;
             }
+        }
+
+        public void setUpTopics()
+        {
+            velPublisher = myConnectedNode.newPublisher(GraphName.of(DEFAULT_CMD_VEL_TOPIC), Twist._TYPE);
+            masterChecker = myConnectedNode.newSubscriber(DEFAULT_MASTER_CHECKER_TOPIC, String._TYPE);
+            masterChecker.addMessageListener(new MessageListener<String>() {
+                @Override
+                public void onNewMessage(String message) {
+                    lastMasterCheckTime = System.currentTimeMillis();
+                }
+            });
+
+            statusPublisher = myConnectedNode.newPublisher(GraphName.of(DEFAULT_STATUS_TOPIC), Bool._TYPE);
+
+            lastMasterCheckTime = System.currentTimeMillis();
+
+            statusUpdateTask = new TimerTask() {
+                @Override
+                public void run() {
+                    updateStatus();
+                }
+            };
+
+            statusUpdateTimer = new Timer();
+
+            statusUpdateTimer.schedule(statusUpdateTask, 0, statusTime);
+
+            publishVel = true;
         }
     }
 }
