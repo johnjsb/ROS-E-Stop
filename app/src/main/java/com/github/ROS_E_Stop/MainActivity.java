@@ -72,6 +72,10 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
     public final java.lang.String DEFAULT_MASTER_CHECKER_TOPIC = "/e_stop/master_checker";
     public final java.lang.String DEFAULT_STATUS_TOPIC = "/e_stop/status";
 
+    public final java.lang.String CMD_VEL_PREF_KEY = "CMD_VEL_TOPIC_NAME";
+    public final java.lang.String STATUS_PREF_KEY = "STATUS_TOPIC_NAME";
+    public final java.lang.String MASTER_CHECKER_PREF_KEY = "MASTER_CHECKER_TOPIC_NAME";
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
