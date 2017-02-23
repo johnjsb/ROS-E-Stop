@@ -68,6 +68,10 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
 
     public static java.lang.String MASTER_URI;
 
+    public final java.lang.String DEFAULT_CMD_VEL_TOPIC = "/e_stop/cmd_vel";
+    public final java.lang.String DEFAULT_MASTER_CHECKER_TOPIC = "/e_stop/master_checker";
+    public final java.lang.String DEFAULT_STATUS_TOPIC = "/e_stop/status";
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -310,9 +314,7 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
         private boolean publishVel;
 
 
-        private final java.lang.String DEFAULT_CMD_VEL_TOPIC = "/e_stop/cmd_vel";
-        private final java.lang.String DEFAULT_MASTER_CHECKER_TOPIC = "/e_stop/master_checker";
-        private final java.lang.String DEFAULT_STATUS_TOPIC = "/e_stop/status";
+
 
 
         public EStopNode(java.lang.String ipAddress) {
