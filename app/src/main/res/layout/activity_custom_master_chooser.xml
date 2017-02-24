@@ -92,7 +92,6 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
-                    android:hint="/e_stop/cmd_vel"
                     android:ems="10"
                     android:id="@+id/cmd_vel_input"
                     android:layout_weight="1" />
@@ -115,7 +114,6 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
-                    android:hint="/e_stop/status"
                     android:ems="10"
                     android:id="@+id/status_input"
                     android:layout_weight="1" />
@@ -138,7 +136,6 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
-                    android:hint="/e_stop/master_checker"
                     android:ems="10"
                     android:id="@+id/master_checker_input"
                     android:layout_weight="1" />

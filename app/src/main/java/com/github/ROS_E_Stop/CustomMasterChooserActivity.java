@@ -62,6 +62,9 @@ public class CustomMasterChooserActivity extends Activity {
 
     private EditText uriText;
     private Button connectButton;
+    private EditText cmd_vel_text;
+    private EditText status_text;
+    private EditText master_checker_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,11 @@ public class CustomMasterChooserActivity extends Activity {
         setContentView(R.layout.activity_custom_master_chooser);
         uriText = (EditText) findViewById(R.id.master_chooser_uri);
         connectButton = (Button) findViewById(R.id.master_chooser_ok);
+
+        cmd_vel_text = (EditText) findViewById(R.id.cmd_vel_input);
+        status_text = (EditText) findViewById(R.id.status_input);
+        master_checker_text = (EditText) findViewById(R.id.master_checker_input);
+
         uriText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -95,6 +103,10 @@ public class CustomMasterChooserActivity extends Activity {
                 getPreferences(MODE_PRIVATE).getString(PREFS_KEY_NAME,
                         NodeConfiguration.DEFAULT_MASTER_URI.toString());
         uriText.setText(uri);
+
+        cmd_vel_text.setText(getPreferences(MODE_PRIVATE).getString(MainActivity.CMD_VEL_PREF_KEY, MainActivity.DEFAULT_CMD_VEL_TOPIC));
+        status_text.setText(getPreferences(MODE_PRIVATE).getString(MainActivity.STATUS_PREF_KEY, MainActivity.DEFAULT_STATUS_TOPIC));
+        master_checker_text.setText(getPreferences(MODE_PRIVATE).getString(MainActivity.MASTER_CHECKER_PREF_KEY, MainActivity.DEFAULT_MASTER_CHECKER_TOPIC));
     }
 
     @Override
