@@ -103,14 +103,13 @@ public class CustomMasterChooserActivity extends Activity {
 
         // Get the URI from preferences and display it. Since only primitive types
         // can be saved in preferences the URI is stored as a string.
-        String uri =
-                getPreferences(MODE_PRIVATE).getString(PREFS_KEY_NAME,
-                        NodeConfiguration.DEFAULT_MASTER_URI.toString());
+        SharedPreferences prefs = getSharedPreferences(MainActivity.SHARED_PREFS, MODE_PRIVATE);
+        String uri = prefs.getString(PREFS_KEY_NAME, NodeConfiguration.DEFAULT_MASTER_URI.toString());
         uriText.setText(uri);
 
-        cmd_vel_text.setText(getPreferences(MODE_PRIVATE).getString(MainActivity.CMD_VEL_PREF_KEY, MainActivity.DEFAULT_CMD_VEL_TOPIC));
-        status_text.setText(getPreferences(MODE_PRIVATE).getString(MainActivity.STATUS_PREF_KEY, MainActivity.DEFAULT_STATUS_TOPIC));
-        master_checker_text.setText(getPreferences(MODE_PRIVATE).getString(MainActivity.MASTER_CHECKER_PREF_KEY, MainActivity.DEFAULT_MASTER_CHECKER_TOPIC));
+        cmd_vel_text.setText(prefs.getString(MainActivity.CMD_VEL_PREF_KEY, MainActivity.DEFAULT_CMD_VEL_TOPIC));
+        status_text.setText(prefs.getString(MainActivity.STATUS_PREF_KEY, MainActivity.DEFAULT_STATUS_TOPIC));
+        master_checker_text.setText(prefs.getString(MainActivity.MASTER_CHECKER_PREF_KEY, MainActivity.DEFAULT_MASTER_CHECKER_TOPIC));
     }
 
     @Override
@@ -212,7 +211,7 @@ public class CustomMasterChooserActivity extends Activity {
             protected void onPostExecute(Boolean result) {
                 if (result) {
                     // If the displayed URI is valid then pack that into the intent.
-                    SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+                    SharedPreferences.Editor editor = getSharedPreferences(MainActivity.SHARED_PREFS, MODE_PRIVATE).edit();
                     editor.putString(PREFS_KEY_NAME, uri);
                     editor.putString(MainActivity.CMD_VEL_PREF_KEY, cmd_vel_text.getText().toString());
                     editor.putString(MainActivity.STATUS_PREF_KEY, status_text.getText().toString());
@@ -324,7 +323,7 @@ public class CustomMasterChooserActivity extends Activity {
                 adb.setIcon(android.R.drawable.ic_dialog_alert);
                 adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent mStartActivity = new Intent(getBaseContext(), MainActivity.class);
+                        Intent mStartActivity = new Intent(getBaseContext(), CustomMasterChooserActivity.class);
                         int mPendingIntentId = 123456;
                         PendingIntent mPendingIntent = PendingIntent.getActivity(getBaseContext(), mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
                         AlarmManager mgr = (AlarmManager)getBaseContext().getSystemService(Context.ALARM_SERVICE);

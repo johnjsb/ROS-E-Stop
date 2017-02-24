@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -75,6 +76,8 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
     public static final java.lang.String CMD_VEL_PREF_KEY = "CMD_VEL_TOPIC_NAME";
     public static final java.lang.String STATUS_PREF_KEY = "STATUS_TOPIC_NAME";
     public static final java.lang.String MASTER_CHECKER_PREF_KEY = "MASTER_CHECKER_TOPIC_NAME";
+
+    public static final java.lang.String SHARED_PREFS = "com.github.ROS_E_STOP";
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -184,7 +187,7 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
                 adb.setIcon(android.R.drawable.ic_dialog_alert);
                 adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent mStartActivity = new Intent(getBaseContext(), MainActivity.class);
+                        Intent mStartActivity = new Intent(getBaseContext(), CustomMasterChooserActivity.class);
                         int mPendingIntentId = 123456;
                         PendingIntent mPendingIntent = PendingIntent.getActivity(getBaseContext(), mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
                         AlarmManager mgr = (AlarmManager)getBaseContext().getSystemService(Context.ALARM_SERVICE);
@@ -334,13 +337,9 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
         public void onStart(final ConnectedNode connectedNode) {
 
             myConnectedNode = connectedNode;
-            publishVel = false;
+            //publishVel = false;
 
-            modelPublisher = connectedNode.newPublisher(GraphName.of("/e_stop/" + ipAddress + "/model"), String._TYPE);
-            modelPublisher.setLatchMode(true);
-            String modelMsg = modelPublisher.newMessage();
-            modelMsg.setData(DeviceName.getDeviceName());
-            modelPublisher.publish(modelMsg);
+
 
             setUpTopics();
 
@@ -414,42 +413,75 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
         public void updateTopicNameTest()
         {
 
-            java.lang.String topic_name = "/tes!t/cmd_vel";
+            java.lang.String topic_name = "/e_stop/cmd_vel/test";
             if(RosTopicChecker.isValidTopicName(topic_name)) {
-                publishVel = false;
-                velPublisher.shutdown();
-                velPublisher = myConnectedNode.newPublisher(GraphName.of(topic_name), Twist._TYPE);
-                publishVel = true;
+                SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE).edit();
+                editor.putString(CMD_VEL_PREF_KEY, topic_name);
+                editor.commit();
+                setUpTopics();
             }
         }
 
         public void setUpTopics()
         {
-            velPublisher = myConnectedNode.newPublisher(GraphName.of(DEFAULT_CMD_VEL_TOPIC), Twist._TYPE);
-            masterChecker = myConnectedNode.newSubscriber(DEFAULT_MASTER_CHECKER_TOPIC, String._TYPE);
-            masterChecker.addMessageListener(new MessageListener<String>() {
-                @Override
-                public void onNewMessage(String message) {
-                    lastMasterCheckTime = System.currentTimeMillis();
-                }
-            });
+            SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+            java.lang.String cmd_vel_topic = prefs.getString(CMD_VEL_PREF_KEY, DEFAULT_CMD_VEL_TOPIC);
+            java.lang.String status_topic = prefs.getString(STATUS_PREF_KEY, DEFAULT_STATUS_TOPIC);
+            java.lang.String master_checker_topic = prefs.getString(MASTER_CHECKER_PREF_KEY, DEFAULT_MASTER_CHECKER_TOPIC);
 
-            statusPublisher = myConnectedNode.newPublisher(GraphName.of(DEFAULT_STATUS_TOPIC), Bool._TYPE);
+            if(velPublisher == null || !velPublisher.getTopicName().toString().equals(cmd_vel_topic))
+            {
+                publishVel = false;
+                if(velPublisher != null)
+                    velPublisher.shutdown();
 
-            lastMasterCheckTime = System.currentTimeMillis();
+                velPublisher = myConnectedNode.newPublisher(GraphName.of(cmd_vel_topic), Twist._TYPE);
+                publishVel = true;
+            }
 
-            statusUpdateTask = new TimerTask() {
-                @Override
-                public void run() {
-                    updateStatus();
-                }
-            };
+            if(masterChecker == null || !masterChecker.getTopicName().toString().equals(master_checker_topic))
+            {
+                if(masterChecker != null)
+                    masterChecker.shutdown();
 
-            statusUpdateTimer = new Timer();
+                masterChecker = myConnectedNode.newSubscriber(master_checker_topic, String._TYPE);
+                masterChecker.addMessageListener(new MessageListener<String>() {
+                    @Override
+                    public void onNewMessage(String message) {
+                        lastMasterCheckTime = System.currentTimeMillis();
+                    }
+                });
+                lastMasterCheckTime = System.currentTimeMillis();
+            }
 
-            statusUpdateTimer.schedule(statusUpdateTask, 0, statusTime);
+            if(statusPublisher == null || !statusPublisher.getTopicName().toString().equals(status_topic))
+            {
+                if(statusPublisher != null)
+                    statusPublisher.shutdown();
 
-            publishVel = true;
+                statusPublisher = myConnectedNode.newPublisher(GraphName.of(status_topic), Bool._TYPE);
+
+                statusUpdateTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        updateStatus();
+                    }
+                };
+
+                statusUpdateTimer = new Timer();
+
+                statusUpdateTimer.schedule(statusUpdateTask, 0, statusTime);
+            }
+
+            if(modelPublisher == null)
+            {
+                modelPublisher = myConnectedNode.newPublisher(GraphName.of("/e_stop/" + ipAddress + "/model"), String._TYPE);
+                modelPublisher.setLatchMode(true);
+                String modelMsg = modelPublisher.newMessage();
+                modelMsg.setData(DeviceName.getDeviceName());
+                modelPublisher.publish(modelMsg);
+            }
+
         }
     }
 }
