@@ -127,13 +127,53 @@ public class CustomMasterChooserActivity extends Activity {
         // Prevent further edits while we verify the URI.
         uriText.setEnabled(false);
         connectButton.setEnabled(false);
+        cmd_vel_text.setEnabled(false);
+        status_text.setEnabled(false);
+        master_checker_text.setEnabled(false);
         final String uri = uriText.getText().toString();
+        final String cmd_vel_topic_text = cmd_vel_text.getText().toString();
+        final String status_topic_text = status_text.getText().toString();
+        final String master_checker_topic_text = master_checker_text.getText().toString();
 
         // Make sure the URI can be parsed correctly and that the master is
         // reachable.
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... params) {
+
+                if(!RosTopicChecker.isValidTopicName(cmd_vel_topic_text))
+                {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            cmd_vel_text.setError("Invalid Topic Name");
+                            cmd_vel_text.requestFocus();
+                        }
+                    });
+                    return false;
+                }
+                else if(!RosTopicChecker.isValidTopicName(status_topic_text))
+                {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            status_text.setError("Invalid Topic Name");
+                            status_text.requestFocus();
+                        }
+                    });
+                    return false;
+                }
+                else if(!RosTopicChecker.isValidTopicName(master_checker_topic_text))
+                {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            master_checker_text.setError("Invalid Topic Name");
+                            master_checker_text.requestFocus();
+                        }
+                    });
+                    return false;
+                }
                 try {
                     toast("Trying to reach master...");
                     MasterClient masterClient = new MasterClient(new URI(uri));
@@ -155,6 +195,9 @@ public class CustomMasterChooserActivity extends Activity {
                     // If the displayed URI is valid then pack that into the intent.
                     SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
                     editor.putString(PREFS_KEY_NAME, uri);
+                    editor.putString(MainActivity.CMD_VEL_PREF_KEY, cmd_vel_text.getText().toString());
+                    editor.putString(MainActivity.STATUS_PREF_KEY, status_text.getText().toString());
+                    editor.putString(MainActivity.MASTER_CHECKER_PREF_KEY, master_checker_text.getText().toString());
                     editor.commit();
                     // Package the intent to be consumed by the calling activity.
                     Intent intent = createNewMasterIntent(false);
@@ -164,6 +207,9 @@ public class CustomMasterChooserActivity extends Activity {
                 } else {
                     connectButton.setEnabled(true);
                     uriText.setEnabled(true);
+                    cmd_vel_text.setEnabled(true);
+                    status_text.setEnabled(true);
+                    master_checker_text.setEnabled(true);
                 }
             }
         }.execute();
