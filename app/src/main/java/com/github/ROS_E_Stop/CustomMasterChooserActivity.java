@@ -65,6 +65,7 @@ public class CustomMasterChooserActivity extends Activity {
     private EditText cmd_vel_text;
     private EditText status_text;
     private EditText master_checker_text;
+    private CheckBox advancedCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,9 @@ public class CustomMasterChooserActivity extends Activity {
         cmd_vel_text = (EditText) findViewById(R.id.cmd_vel_input);
         status_text = (EditText) findViewById(R.id.status_input);
         master_checker_text = (EditText) findViewById(R.id.master_checker_input);
+
+        advancedCheckBox = (CheckBox) findViewById(R.id.advanced_checkBox);
+        advancedCheckboxClicked(advancedCheckBox);
 
         uriText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -146,6 +150,11 @@ public class CustomMasterChooserActivity extends Activity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            if(!advancedCheckBox.isChecked())
+                            {
+                                advancedCheckBox.setChecked(true);
+                                advancedCheckboxClicked(advancedCheckBox);
+                            }
                             cmd_vel_text.setError("Invalid Topic Name");
                             cmd_vel_text.requestFocus();
                         }
@@ -157,6 +166,11 @@ public class CustomMasterChooserActivity extends Activity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            if(!advancedCheckBox.isChecked())
+                            {
+                                advancedCheckBox.setChecked(true);
+                                advancedCheckboxClicked(advancedCheckBox);
+                            }
                             status_text.setError("Invalid Topic Name");
                             status_text.requestFocus();
                         }
@@ -168,6 +182,11 @@ public class CustomMasterChooserActivity extends Activity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            if(!advancedCheckBox.isChecked())
+                            {
+                                advancedCheckBox.setChecked(true);
+                                advancedCheckboxClicked(advancedCheckBox);
+                            }
                             master_checker_text.setError("Invalid Topic Name");
                             master_checker_text.requestFocus();
                         }
