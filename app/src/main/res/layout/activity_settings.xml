@@ -17,4 +17,14 @@
         android:layout_alignParentTop="true"
         android:layout_height="65dp"
         android:drawableStart="@drawable/ros_logo" />
+
+    <Button
+        android:text="Change App Settings"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_marginTop="15dp"
+        android:id="@+id/appSettingsButton"
+        android:layout_below="@+id/TopicsButton"
+        android:layout_alignParentLeft="true"
+        android:drawableStart="@android:drawable/ic_menu_preferences" />
 </RelativeLayout>
