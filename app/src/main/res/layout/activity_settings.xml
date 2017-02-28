@@ -10,4 +10,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.github.ROS_E_Stop.SettingsActivity">
 
+    <Button
+        android:text="Change ROS Topics"
+        android:layout_width="match_parent"
+        android:id="@+id/TopicsButton"
+        android:layout_alignParentTop="true"
+        android:layout_height="65dp"
+        android:drawableStart="@drawable/ros_logo" />
 </RelativeLayout>
