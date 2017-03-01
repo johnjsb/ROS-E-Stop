@@ -69,7 +69,7 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
 
     public static java.lang.String MASTER_URI;
 
-    public static final java.lang.String DEFAULT_CMD_VEL_TOPIC = "/e_stop/cmd_vel";
+    public static final java.lang.String DEFAULT_CMD_VEL_TOPIC = "/e_stop/cmd_vel/hello";
     public static final java.lang.String DEFAULT_MASTER_CHECKER_TOPIC = "/e_stop/master_checker";
     public static final java.lang.String DEFAULT_STATUS_TOPIC = "/e_stop/status";
 
