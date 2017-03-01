@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+//hello world
+
 public class SettingsActivity extends Activity {
 
     @Override
