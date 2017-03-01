@@ -79,6 +79,9 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
 
     public static final java.lang.String SHARED_PREFS = "com.github.ROS_E_STOP";
 
+
+    public static int SETTINGS_REQUEST_CODE = 5;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -162,8 +165,11 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-
+        if (requestCode == SETTINGS_REQUEST_CODE) {
+            if(resultCode == RESULT_OK)
+            {
+                vibrate.vibrate(1000);
+            }
         }
     }
 
@@ -316,12 +322,8 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
 
         private boolean connectionError = false;
 
-
         private ConnectedNode myConnectedNode;
         private boolean publishVel;
-
-
-
 
 
         public EStopNode(java.lang.String ipAddress) {
@@ -338,8 +340,6 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
 
             myConnectedNode = connectedNode;
             //publishVel = false;
-
-
 
             setUpTopics();
 
@@ -420,6 +420,8 @@ public class MainActivity extends RosActivity implements RotationGestureDetector
                 editor.commit();
                 setUpTopics();
             }
+            Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivityForResult(i, SETTINGS_REQUEST_CODE);
         }
 
         public void setUpTopics()
